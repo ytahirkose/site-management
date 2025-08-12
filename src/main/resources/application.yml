@@ -1,0 +1,133 @@
+spring:
+  application:
+    name: smartshopai-site-management
+  
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      database: ${MONGODB_DATABASE}
+      auto-index-creation: true
+      # MongoDB Atlas specific configurations
+      # SSL settings are handled automatically by MongoDB Atlas connection string
+  
+  security:
+    jwt:
+      secret: ${JWT_SECRET}
+      expiration: ${JWT_EXPIRATION:86400000} # 24 hours in milliseconds
+  
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: ${MAIL_SMTP_AUTH:true}
+          starttls:
+            enable: ${MAIL_STARTTLS_ENABLE:true}
+  
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=600s
+  
+  task:
+    execution:
+      pool:
+        core-size: 8
+        max-size: 16
+        queue-capacity: 100
+        keep-alive: 60s
+    scheduling:
+      pool:
+        size: 5
+        thread-name-prefix: scheduled-task-
+
+# File Storage Configuration
+app:
+  file:
+    storage:
+      type: ${STORAGE_TYPE:local} # local, cloudinary, firebase, supabase
+      local:
+        upload-dir: ${UPLOAD_DIR:uploads}
+        max-file-size: 10MB
+        allowed-extensions: jpg,jpeg,png,gif,pdf,doc,docx
+      cloudinary:
+        cloud-name: ${CLOUDINARY_CLOUD_NAME:}
+        api-key: ${CLOUDINARY_API_KEY:}
+        api-secret: ${CLOUDINARY_API_SECRET:}
+        folder: site-management
+        transformation: "f_auto,q_auto"
+      firebase:
+        project-id: ${FIREBASE_PROJECT_ID:}
+        private-key-id: ${FIREBASE_PRIVATE_KEY_ID:}
+        private-key: ${FIREBASE_PRIVATE_KEY:}
+        client-email: ${FIREBASE_CLIENT_EMAIL:}
+        client-id: ${FIREBASE_CLIENT_ID:}
+        bucket: ${FIREBASE_BUCKET:site-management}
+      supabase:
+        url: ${SUPABASE_URL:}
+        key: ${SUPABASE_KEY:}
+        bucket: ${SUPABASE_BUCKET:site-management}
+        region: ${SUPABASE_REGION:us-east-1}
+  
+  push:
+    fcm:
+      server-key: ${FCM_SERVER_KEY:}
+      project-id: ${FCM_PROJECT_ID:}
+      enabled: ${FCM_ENABLED:false}
+      retry-count: ${FCM_RETRY_COUNT:3}
+      timeout: ${FCM_TIMEOUT:5000}
+  
+  business:
+    payment:
+      late-fee-rate: ${LATE_FEE_RATE:0.05}
+      max-late-fee-percentage: ${MAX_LATE_FEE_PERCENTAGE:0.50}
+      reminder-interval-days: ${REMINDER_INTERVAL_DAYS:7}
+    notification:
+      batch-size: ${NOTIFICATION_BATCH_SIZE:100}
+      retry-delay-seconds: ${NOTIFICATION_RETRY_DELAY:300}
+    file:
+      virus-scan-enabled: ${VIRUS_SCAN_ENABLED:false}
+      compression-enabled: ${COMPRESSION_ENABLED:true}
+      thumbnail-enabled: ${THUMBNAIL_ENABLED:true}
+
+# Logging
+logging:
+  level:
+    com.smartshopai: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.data.mongodb: DEBUG
+    org.springframework.web: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Server
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api/v1
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
