@@ -231,3 +231,6 @@ public
 # Temporary folders
 tmp/
 temp/
+
+# Business Plan (local only)
+business_plan.md
