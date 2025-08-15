@@ -98,3 +98,14 @@ compileJava {
 
 // Ensure MapStruct generates code before Lombok
 compileJava.dependsOn(processResources)
+
+// JAR configuration
+jar {
+    enabled = false
+}
+
+bootJar {
+    archiveBaseName = 'site-management'
+    archiveVersion = '1.0.0'
+    archiveClassifier = ''
+}

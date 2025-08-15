@@ -8,15 +8,15 @@ WORKDIR /app
 COPY gradlew .
 COPY gradle gradle
 
-# Copy source code
+# Copy source code and build files
 COPY src src
-COPY build.gradle .
+COPY build.gradle settings.gradle ./
 
 # Make gradlew executable
 RUN chmod +x gradlew
 
 # Build the application
-RUN ./gradlew build -x test
+RUN ./gradlew bootJar -x test --no-daemon
 
 # Expose port
 EXPOSE 8080
